@@ -1,0 +1,22 @@
+[build-system]
+requires = []
+build-backend = "_build"
+backend-path = ["."]
+
+[project]
+name = "axiocairn"
+version = "0.2.0"
+description = "Local receipt reconciliation with real runtime file-object workers"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = []
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+authors = [{name = "Axiocairn Authors"}]
+
+[project.scripts]
+axiocairn = "axiocairn.cli:main"
+
+[project.urls]
+Repository = "https://github.com/cplj/axiocairn-public"
+Documentation = "https://github.com/cplj/axiocairn-public/blob/main/README.md"

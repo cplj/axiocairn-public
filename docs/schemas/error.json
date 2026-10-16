@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RecoveryError",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "state",
+    "error",
+    "message"
+  ],
+  "properties": {
+    "state": {
+      "const": "ERROR"
+    },
+    "error": {
+      "type": "string"
+    },
+    "message": {
+      "type": "string"
+    }
+  }
+}

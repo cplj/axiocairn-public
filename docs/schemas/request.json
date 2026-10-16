@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RecoveryRequest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "intent_db",
+    "receipt_db",
+    "name",
+    "kind",
+    "account",
+    "action",
+    "version"
+  ],
+  "properties": {
+    "intent_db": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "receipt_db": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "kind": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S",
+      "enum": [
+        "ledger",
+        "append"
+      ]
+    },
+    "account": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "action": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    }
+  }
+}

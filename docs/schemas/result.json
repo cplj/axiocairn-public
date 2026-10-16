@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RecoveryResult",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "tool",
+    "payload",
+    "version",
+    "state",
+    "detail"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "tool": {
+      "type": "string"
+    },
+    "payload": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "COMPLETED",
+        "UNKNOWN",
+        "MANUAL_REVIEW",
+        "VERSION_MISMATCH",
+        "RETRY_SAFE",
+        "PREPARED"
+      ]
+    },
+    "detail": {
+      "type": "string"
+    }
+  }
+}

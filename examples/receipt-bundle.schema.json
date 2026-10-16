@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Axiocairn file-object receipt bundle: intent.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "id", "version", "tool", "payload"],
+  "properties": {
+    "schema": {"const": 1},
+    "id": {"type": "string", "pattern": "^[A-Za-z0-9_-]{1,100}$"},
+    "version": {"type": "string", "minLength": 1},
+    "tool": {"type": "string", "description": "Canonical JSON array of adapter name and original loopback server URL"},
+    "payload": {"type": "string", "description": "Canonical JSON object with object=id, sha256=64 lowercase hex digits and size=nonnegative integer"}
+  },
+  "$comment": "report.json must match id/version/tool/payload exactly and state must be COMPLETED. object.bin is the independent GET snapshot; size and SHA-256 must match payload. Unresolved reports never verify successfully. This is consistency verification, not origin authentication."
+}

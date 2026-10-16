@@ -1,0 +1,251 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Axiocairn local recovery API",
+    "version": "0.2.0",
+    "license": {
+      "name": "Apache-2.0"
+    }
+  },
+  "externalDocs": {
+    "description": "Usage and limitations",
+    "url": "https://github.com/cplj/axiocairn-public/blob/main/README.md"
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:8765"
+    }
+  ],
+  "paths": {
+    "/recover": {
+      "post": {
+        "operationId": "recover",
+        "summary": "Reconcile an existing local operation without execution",
+        "description": "Trusted loopback callers only. Requires Content-Length, application/json and at most 65536 body bytes. Duplicate object keys and nonfinite numbers are rejected. HTTP 200 may be unresolved. The API can update the intent store.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecoveryRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Recovery result; inspect state, including unresolved outcomes.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecoveryResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid JSON, fields, identity, or framing.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecoveryError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown endpoint.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecoveryError"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Unsupported method.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecoveryError"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Incomplete or slow body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecoveryError"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Body exceeds 65536 bytes.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecoveryError"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Content type must be application/json.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecoveryError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "SQLite or existing-store error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecoveryError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected internal recovery failure.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecoveryError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RecoveryRequest": {
+        "title": "RecoveryRequest",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "intent_db",
+          "receipt_db",
+          "name",
+          "kind",
+          "account",
+          "action",
+          "version"
+        ],
+        "properties": {
+          "intent_db": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "receipt_db": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "kind": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S",
+            "enum": [
+              "ledger",
+              "append"
+            ]
+          },
+          "account": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "action": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "version": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        }
+      },
+      "RecoveryResult": {
+        "title": "RecoveryResult",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "tool",
+          "payload",
+          "version",
+          "state",
+          "detail"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "tool": {
+            "type": "string"
+          },
+          "payload": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "COMPLETED",
+              "UNKNOWN",
+              "MANUAL_REVIEW",
+              "VERSION_MISMATCH",
+              "RETRY_SAFE",
+              "PREPARED"
+            ]
+          },
+          "detail": {
+            "type": "string"
+          }
+        }
+      },
+      "RecoveryError": {
+        "title": "RecoveryError",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "state",
+          "error",
+          "message"
+        ],
+        "properties": {
+          "state": {
+            "const": "ERROR"
+          },
+          "error": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

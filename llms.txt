@@ -1,0 +1,27 @@
+# Axiocairn
+
+> Reconcile uncertain tool actions against effect evidence before deciding whether any further action is safe.
+
+- [Installation and binary precheck](README.md#install-and-check-prerequisites): Python 3.11+, pip/venv; macOS/Linux archive names and pinned Temporal 1.9.1, Inngest 1.46.0, restate-server 1.8.0. Core installation does not install server binaries or worker SDKs.
+- [Real file worker run](README.md#run-a-real-file-through-three-real-runtimes): complete shell block stops on any failure; uses a caller-selected non-secret file and a new work directory.
+- [For AI agents](README.md#for-ai-agents): installation, permission boundary, minimum call, receipt path source, contracts and error handling.
+- [Common errors](README.md#common-errors): missing prerequisites, malformed requests, missing evidence and unresolved states.
+- [Runner](examples/run_local.py): --check checks selected binaries and SDK imports without starting effects; use the same --*-bin paths for checking and execution.
+- [Pinned worker SDKs](examples/requirements.txt)
+- [Temporal worker](examples/temporal_worker.py)
+- [Inngest worker](examples/inngest_worker.py)
+- [Restate worker](examples/restate_worker.py)
+- [File-object bundle schema](examples/receipt-bundle.schema.json)
+- [SQLite request schema](docs/schemas/request.json)
+- [Result schema](docs/schemas/result.json)
+- [Error envelope](docs/schemas/error.json)
+- [HTTP API](openapi.yaml): loopback POST /recover.
+
+Core install from this checkout: python3 -m venv .venv && .venv/bin/python -m pip install .
+Activate with . .venv/bin/activate. Real workers also need python -m pip install -r examples/requirements.txt and python -B examples/run_local.py --check. PyPI publication is pending.
+
+Minimum read-only call: axiocairn verify --receipts "/absolute/path/to/run/temporal/receipts". Use the actual run directory printed by the README block or the receipts field of run/<runtime>/request.json. Bundle files: intent.json, report.json and object.bin for COMPLETED. Verification makes no network calls.
+
+Recovery CLI stdout is one JSON object, with state/error/message on invalid input. Offline verification returns state/verified for readable domain reports. Invalid arguments use stderr. Exit 0 requires COMPLETED (verify also requires verified=true), exit 3 is unresolved, exit 2 is invalid input or evidence. Read message and restore original input/evidence; never invent a receipt bundle. The runner emits one row per runtime; --check is prerequisite information, not operation completion.
+
+Preserve UNKNOWN and the original operation ID, version, stores and URL. Reconciliation and verification never repeat the original effect. The worker run does execute an actual local PUT and requires the caller's effect permission. No automatic action resubmission. Evidence origin is unauthenticated; offline consistency does not prove current remote state, exactly-once execution or production reliability. No login, cloud service or payment is required; initial installation may need network access.
